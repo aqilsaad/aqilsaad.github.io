@@ -3,299 +3,389 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aqil Saad - Web Developer Portfolio</title>
+    <title>ValueMatrix - AI-Powered Hiring for High-Performing Teams</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #1A1A1A; /* Charcoal Black */
-            color: #F5F5F5; /* Off-White */
-            overflow-x: hidden;
+            background-color: #FFFFFF;
+            color: #374151; /* gray-700 */
         }
-
-        .accent-color { color: #A78BFA; } /* Light Purple */
-        .accent-bg { background-color: #A78BFA; }
-        .accent-border { border-color: #A78BFA; }
-
-        .card-bg {
-            background-color: #262626; /* Darker Gray */
-            border: 1px solid #404040; /* Gray border */
+        .gradient-text {
+            color: #0F766E; /* teal-700 */
         }
-        
-        .hero-gradient-text {
-            background: linear-gradient(to right, #F5F5F5, #A78BFA);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .cta-button {
+            background-color: #14B8A6; /* teal-500 */
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
         }
-
-        .project-card {
+        .cta-button:hover {
+            background-color: #0D9488; /* teal-600 */
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.4);
+        }
+        .feature-card {
+            background: #F9FAFB; /* gray-50 */
+            border: 1px solid #E5E7EB; /* gray-200 */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.1);
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
         }
-
-        /* Scroll Reveal Animations */
-        [data-scroll-reveal] {
+        .section-reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-
-        [data-scroll-reveal="in"] {
+        .section-reveal.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Back to top button */
-        #back-to-top-btn {
+
+        /* Chatbot Styles */
+        #chatbot-widget-container {
             position: fixed;
-            bottom: 20px;
+            bottom: 100px;
             right: 20px;
+            width: 90%;
+            max-width: 400px;
+            height: 70vh;
+            max-height: 600px;
+            z-index: 1000;
             opacity: 0;
-            transform: translateY(100px);
-            transition: all 0.4s ease;
-            z-index: 100;
+            transform: translateY(30px) scale(0.95);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
         }
-        #back-to-top-btn.active {
+        #chatbot-widget-container.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
         }
+        #chat-container::-webkit-scrollbar { width: 6px; }
+        #chat-container::-webkit-scrollbar-track { background: #F3F4F6; }
+        #chat-container::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+        #chat-container::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+        
+        .bot-message-wrapper, .user-message-wrapper {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slide-in 0.3s forwards;
+        }
+        @keyframes slide-in { to { opacity: 1; transform: translateY(0); } }
+
+        .dot-flashing { position: relative; width: 8px; height: 8px; border-radius: 5px; background-color: #9CA3AF; color: #9CA3AF; animation: dotFlashing 1s infinite linear alternate; animation-delay: .5s; }
+        .dot-flashing::before, .dot-flashing::after { content: ''; display: inline-block; position: absolute; top: 0; }
+        .dot-flashing::before { left: -12px; width: 8px; height: 8px; border-radius: 5px; background-color: #9CA3AF; color: #9CA3AF; animation: dotFlashing 1s infinite alternate; animation-delay: 0s; }
+        .dot-flashing::after { left: 12px; width: 8px; height: 8px; border-radius: 5px; background-color: #9CA3AF; color: #9CA3AF; animation: dotFlashing 1s infinite alternate; animation-delay: 1s; }
+        @keyframes dotFlashing { 0% { background-color: #9CA3AF; } 50%, 100% { background-color: #4B5563; } }
+
+        #demo-modal.hidden { display: none; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- HEADER -->
-    <header class="site-header fixed top-0 left-0 right-0 z-50 bg-opacity-80 backdrop-blur-lg border-b border-gray-800">
-        <div class="main-container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="site-logo text-2xl font-bold tracking-tight">Aqil Saad</a>
-            <nav class="main-nav hidden md:flex space-x-8">
-                <a href="#about" class="nav-link hover:text-purple-400 transition-colors">About</a>
-                <a href="#skills" class="nav-link hover:text-purple-400 transition-colors">Skills</a>
-                <a href="#projects" class="nav-link hover:text-purple-400 transition-colors">Projects</a>
-                <a href="#contact" class="nav-link hover:text-purple-400 transition-colors">Contact</a>
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tighter text-gray-900">ValueMatrix</h1>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#solution" class="text-gray-600 hover:text-teal-600 transition-colors">Our Solution</a>
+                <a href="#features" class="text-gray-600 hover:text-teal-600 transition-colors">Features</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-teal-600 transition-colors">How It Works</a>
             </nav>
-            <button id="mobile-menu-toggle" class="md:hidden">
-                <i data-lucide="menu"></i>
+            <button class="open-demo-modal-btn cta-button text-white font-semibold px-5 py-2 rounded-lg">
+                Request Demo
             </button>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
-            <a href="#about" class="mobile-nav-link block py-2 hover:text-purple-400">About</a>
-            <a href="#skills" class="mobile-nav-link block py-2 hover:text-purple-400">Skills</a>
-            <a href="#projects" class="mobile-nav-link block py-2 hover:text-purple-400">Projects</a>
-            <a href="#contact" class="mobile-nav-link block py-2 hover:text-purple-400">Contact</a>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-container mx-auto px-6 pt-24 md:pt-32">
+    <main class="pt-20">
 
-        <!-- HERO SECTION -->
-        <section id="home" class="hero-section min-h-[90vh] flex items-center">
-            <div class="grid md:grid-cols-5 gap-12 items-center">
-                <div class="md:col-span-3" data-scroll-reveal>
-                    <h2 class="text-xl font-medium text-purple-400">Hello, I'm Aqil Saad</h2>
-                    <h1 class="text-5xl md:text-7xl font-extrabold mt-2 tracking-tighter hero-gradient-text">
-                        Creative Web Developer
-                    </h1>
-                    <p class="mt-6 text-lg text-gray-400 max-w-2xl">
-                        A passionate and detail-oriented 3rd-year BCA student, focused on building beautiful, responsive, and user-friendly web applications with modern technologies.
-                    </p>
-                    <div class="mt-8 flex gap-4 flex-wrap">
-                        <a href="#contact" class="cta-button bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 inline-flex items-center gap-2">
-                            <i data-lucide="mail" class="w-5 h-5"></i>
-                            Contact Me
-                        </a>
-                        <a href="https://www.linkedin.com/in/aqil-saad-196897371" target="_blank" class="cta-button bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold py-3 px-6 rounded-lg transition-all transform hover:scale-105 inline-flex items-center gap-2">
-                             <i data-lucide="linkedin" class="w-5 h-5"></i>
-                            LinkedIn
-                        </a>
-                    </div>
-                </div>
-                <div class="md:col-span-2 flex justify-center" data-scroll-reveal>
-                    <!-- Profile Picture -->
-                    <img src="images/Aqil_Linkdin.jpg" alt="Aqil Saad Profile Picture" class="w-64 h-64 md:w-80 md:h-80 rounded-full object-cover border-4 border-purple-500 shadow-lg">
-                </div>
-            </div>
-        </section>
-
-        <!-- ABOUT SECTION -->
-        <section id="about" class="about-section py-24">
-            <div data-scroll-reveal class="max-w-4xl mx-auto text-center">
-                <h2 class="section-title text-4xl font-bold mb-4">About Me</h2>
-                <div class="about-card card-bg rounded-xl p-8 md:p-12">
-                    <p class="text-lg text-gray-300 mb-4">
-                        I am a dedicated Bachelor of Computer Applications student at Kristu Jayanti University, Bengaluru. My passion is crafting elegant and effective solutions for the web, from the user interface to the back-end logic. I love bringing ideas to life in the browser.
-                    </p>
-                    <p class="text-lg text-gray-300">
-                        As a 3rd-year student, I have a solid foundation in core web technologies and enjoy working collaboratively to solve complex problems. I am always eager to learn new frameworks and tools to improve my craft and build better digital experiences.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SKILLS SECTION -->
-        <section id="skills" class="skills-section py-24">
-            <div data-scroll-reveal class="max-w-6xl mx-auto">
-                <h2 class="section-title text-4xl font-bold mb-12 text-center">My Tech Stack</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Front-End -->
-                    <div class="skill-category-card card-bg rounded-xl p-8">
-                        <h3 class="text-2xl font-semibold mb-6 text-purple-400">Front-End</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-3"><i data-lucide="code" class="w-5 h-5 text-purple-400"></i><span>HTML5 & CSS3</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="braces" class="w-5 h-5 text-purple-400"></i><span>JavaScript (ES6+)</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="atom" class="w-5 h-5 text-purple-400"></i><span>React</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="wind" class="w-5 h-5 text-purple-400"></i><span>Tailwind CSS</span></div>
-                        </div>
-                    </div>
-                    <!-- Back-End -->
-                    <div class="skill-category-card card-bg rounded-xl p-8">
-                        <h3 class="text-2xl font-semibold mb-6 text-purple-400">Back-End</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-3"><i data-lucide="server" class="w-5 h-5 text-purple-400"></i><span>Node.js & Express.js</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="arrow-left-right" class="w-5 h-5 text-purple-400"></i><span>REST APIs</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="database" class="w-5 h-5 text-purple-400"></i><span>MongoDB</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="database" class="w-5 h-5 text-purple-400"></i><span>MySQL</span></div>
-                        </div>
-                    </div>
-                    <!-- Tools & Platforms -->
-                    <div class="skill-category-card card-bg rounded-xl p-8">
-                        <h3 class="text-2xl font-semibold mb-6 text-purple-400">Tools & Platforms</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-3"><i data-lucide="git-branch" class="w-5 h-5 text-purple-400"></i><span>Git & GitHub</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="figma" class="w-5 h-5 text-purple-400"></i><span>Figma</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="terminal" class="w-5 h-5 text-purple-400"></i><span>VS Code</span></div>
-                            <div class="flex items-center gap-3"><i data-lucide="cloud" class="w-5 h-5 text-purple-400"></i><span>Netlify / Vercel</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROJECTS SECTION -->
-        <section id="projects" class="projects-section py-24">
-             <div data-scroll-reveal>
-                <h2 class="section-title text-4xl font-bold mb-12 text-center">Featured Projects</h2>
-                <div class="projects-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Project 1 -->
-                    <div class="project-card card-bg rounded-xl overflow-hidden flex flex-col">
-                        <img src="https://placehold.co/600x400/262626/A78BFA?text=E-Commerce" alt="E-Commerce Project Thumbnail" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold mb-2 text-purple-400">E-Commerce Website</h3>
-                            <p class="text-gray-400 flex-grow mb-4">
-                                A full-stack e-commerce platform using the MERN stack with product catalog, shopping cart, and user authentication.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Project 2 -->
-                    <div class="project-card card-bg rounded-xl overflow-hidden flex flex-col">
-                        <img src="https://placehold.co/600x400/262626/A78BFA?text=Blog+Platform" alt="Blogging Platform Project Thumbnail" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold mb-2 text-purple-400">Blogging Platform</h3>
-                            <p class="text-gray-400 flex-grow mb-4">
-                                A responsive blogging app with a CMS for post management, built with React and a Node.js REST API.
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Project 3 -->
-                    <div class="project-card card-bg rounded-xl overflow-hidden flex flex-col">
-                        <img src="https://placehold.co/600x400/262626/A78BFA?text=Task+Manager" alt="Task Management App Project Thumbnail" class="w-full h-48 object-cover">
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold mb-2 text-purple-400">Task Management App</h3>
-                            <p class="text-gray-400 flex-grow mb-4">
-                                A sleek, single-page task app using React and Tailwind CSS, with drag-and-drop and local storage persistence.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONTACT SECTION -->
-        <section id="contact" class="contact-section py-24 text-center">
-            <div data-scroll-reveal>
-                <h2 class="section-title text-4xl font-bold mb-4">Let's Connect</h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto mb-8">
-                    I'm actively looking for web development internship opportunities. If you have a project in mind or just want to connect, feel free to reach out!
+        <!-- Hero Section -->
+        <section class="relative py-20 md:py-32 text-center overflow-hidden">
+            <div class="container mx-auto px-6 relative z-10">
+                <h2 class="text-4xl md:text-6xl font-extrabold tracking-tighter text-gray-900 mb-4">
+                    Build high-performing teams with 
+                    <span class="gradient-text">AI-powered hiring</span>
+                </h2>
+                <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-600 mb-8">
+                    Go beyond resumes. Our AI platform assesses cultural and team alignment *before* the first interview, ensuring you hire candidates who truly belong.
                 </p>
-                <div class="mt-8">
-                    <a href="mailto:saadaqil27@gmail.com" class="cta-button text-xl bg-purple-500 hover:bg-purple-600 text-white font-semibold py-4 px-8 rounded-lg transition-all transform hover:scale-105 inline-flex items-center gap-3">
-                        <i data-lucide="mail" class="w-6 h-6"></i>
-                        saadaqil27@gmail.com
-                    </a>
+                <div class="flex justify-center gap-4">
+                    <button class="open-demo-modal-btn cta-button text-white font-bold text-lg px-8 py-4 rounded-lg">
+                        Get a Free Demo
+                    </button>
                 </div>
             </div>
         </section>
 
+        <!-- The Solution Section -->
+        <section id="solution" class="py-20 bg-gray-50 section-reveal">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-teal-600">The Problem</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">Traditional hiring is broken.</h2>
+                    <p class="max-w-2xl mx-auto text-gray-600 mt-4">Bias, guesswork, and mismatched hires lead to high turnover and underperforming teams. It's time to stop sorting resumes and start building synergy.</p>
+                </div>
+                <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+                    <div class="p-8 rounded-lg">
+                         <h3 class="text-sm font-bold uppercase tracking-widest text-teal-600">Our Solution</h3>
+                        <h2 class="text-3xl font-bold text-gray-900 mt-2 mb-4">We Flip the Funnel</h2>
+                        <p class="text-gray-700 text-lg">
+                           ValueMatrix revolutionizes recruitment by prioritizing what matters most: a candidate's potential to thrive within your unique culture and team dynamics. Our AI provides a holistic view, analyzing soft skills, personality traits, and values to predict long-term success.
+                        </p>
+                        <p class="text-gray-700 text-lg mt-4">
+                            This means you only interview candidates who are already a great fit, saving countless hours and ensuring you build a cohesive, high-performing workforce.
+                        </p>
+                    </div>
+                    <div>
+                        <img src="https://placehold.co/600x400/F9FAFB/14B8A6?text=Flipping+the+Funnel" alt="Diagram showing the traditional vs ValueMatrix hiring funnel" class="rounded-xl shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 section-reveal">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-teal-600">Why ValueMatrix</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">Hire Smarter, Not Harder</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Unbiased Hiring</h3><p class="text-gray-600">Our AI focuses on intrinsic qualities and potential, removing unconscious bias from your screening process to build truly diverse teams.</p></div>
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Increase Productivity</h3><p class="text-gray-600">Teams with strong cultural alignment are more engaged and collaborative, leading to significant boosts in overall productivity and innovation.</p></div>
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Reduce Turnover</h3><p class="text-gray-600">By ensuring a perfect fit from day one, you dramatically improve employee satisfaction and retention, saving on costly re-hiring.</p></div>
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Data-Driven Insights</h3><p class="text-gray-600">Make hiring decisions based on predictive data, not just gut feelings. Understand team dynamics like never before.</p></div>
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Holistic Assessment</h3><p class="text-gray-600">We analyze everything from micro-expressions to cognitive patterns, providing a complete picture of a candidate's potential.</p></div>
+                    <div class="feature-card p-6 rounded-xl"><h3 class="text-xl font-bold text-gray-900 mb-2">Save Time & Money</h3><p class="text-gray-600">Cut down on screening time and interview hours by focusing only on the most promising, pre-vetted candidates.</p></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 bg-gray-50 section-reveal">
+            <div class="container mx-auto px-6">
+                 <div class="text-center mb-12">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-teal-600">The Process</h3>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2">Hire with Confidence in 3 Steps</h2>
+                </div>
+                <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 text-center">
+                    <div class="flex flex-col items-center">
+                         <div class="flex items-center justify-center w-16 h-16 bg-white border-2 border-teal-500 rounded-full text-2xl font-bold text-teal-600 mb-4">1</div>
+                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Define Your Culture</h3>
+                         <p class="text-gray-600">Our platform helps you codify your unique company culture and the specific needs of your team.</p>
+                    </div>
+                     <div class="flex flex-col items-center">
+                         <div class="flex items-center justify-center w-16 h-16 bg-white border-2 border-teal-500 rounded-full text-2xl font-bold text-teal-600 mb-4">2</div>
+                         <h3 class="text-xl font-semibold text-gray-900 mb-2">AI-Powered Assessment</h3>
+                         <p class="text-gray-600">Candidates engage with our platform, and our AI performs a deep analysis of their traits and potential fit.</p>
+                    </div>
+                     <div class="flex flex-col items-center">
+                         <div class="flex items-center justify-center w-16 h-16 bg-white border-2 border-teal-500 rounded-full text-2xl font-bold text-teal-600 mb-4">3</div>
+                         <h3 class="text-xl font-semibold text-gray-900 mb-2">Hire the Perfect Match</h3>
+                         <p class="text-gray-600">Receive a prioritized shortlist of candidates who are scientifically proven to be a great fit. Conduct your final interviews and hire!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact / CTA Section -->
+        <section id="contact" class="py-20 section-reveal">
+            <div class="container mx-auto px-6">
+                <div class="bg-gray-800 rounded-2xl p-10 md:p-16 text-center">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to Build a Better Team?</h2>
+                    <p class="max-w-2xl mx-auto text-gray-300 mt-4 mb-8">
+                        Schedule a free, personalized demo with one of our experts to see how ValueMatrix can transform your hiring process.
+                    </p>
+                    <button class="open-demo-modal-btn cta-button inline-block text-white font-bold text-lg px-8 py-4 rounded-lg">
+                        Request Your Free Demo
+                    </button>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="site-footer border-t border-gray-800">
-        <div class="main-container mx-auto px-6 py-8 text-center text-gray-500">
-             <div class="flex justify-center gap-6 mb-4">
-                <a href="mailto:saadaqil27@gmail.com" class="hover:text-purple-400 transition-colors"><i data-lucide="mail"></i></a>
-                <a href="https://www.linkedin.com/in/aqil-saad-196897371" target="_blank" class="hover:text-purple-400 transition-colors"><i data-lucide="linkedin"></i></a>
-                <a href="tel:9611029322" class="hover:text-purple-400 transition-colors"><i data-lucide="phone"></i></a>
-            </div>
-            <p>&copy; 2025 Aqil Saad. All Rights Reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2024 ValueMatrix. All rights reserved.</p>
+            <p class="text-sm mt-2">Revolutionizing how the world's best teams are built.</p>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <a href="#home" id="back-to-top-btn" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-full shadow-lg">
-        <i data-lucide="arrow-up"></i>
-    </a>
+    <!-- Chatbot FAB -->
+    <button id="chatbot-fab" class="cta-button fixed bottom-5 right-5 w-16 h-16 rounded-full text-white flex items-center justify-center shadow-lg z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+    </button>
+    
+    <!-- Chatbot Widget -->
+    <div id="chatbot-widget-container">
+        <div class="w-full h-full bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200">
+            <div class="bg-teal-500 p-4 border-b border-gray-200 flex items-center justify-between">
+                <div class="flex items-center space-x-3"><div class="w-10 h-10 rounded-full bg-white/30 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg></div><div><h1 class="text-lg font-bold text-white">ValueMatrix AI Assistant</h1><p class="text-sm text-teal-100 flex items-center"><span class="w-2 h-2 bg-white rounded-full mr-1.5"></span>Online</p></div></div>
+                <button id="close-chatbot-btn" class="text-white/70 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
+            </div>
+            <div id="chat-container" class="flex-1 p-4 sm:p-6 space-y-4 overflow-y-auto bg-gray-50"></div>
+            <div id="loading-indicator" class="hidden p-4 sm:p-6 bg-gray-50"><div class="flex items-center space-x-3 bot-message-wrapper"><div class="w-8 h-8 rounded-full bg-teal-500 flex-shrink-0"></div><div class="bg-gray-200 p-3 rounded-lg flex items-center"><div class="dot-flashing"></div></div></div></div>
+            <div id="suggestions-container" class="p-2 border-t border-gray-200 bg-gray-50"><div class="flex flex-wrap gap-2 justify-center"><button class="suggestion-chip bg-white hover:bg-gray-100 text-gray-600 text-sm px-3 py-1.5 rounded-full border border-gray-300">What is ValueMatrix?</button><button class="suggestion-chip bg-white hover:bg-gray-100 text-gray-600 text-sm px-3 py-1.5 rounded-full border border-gray-300">How does it work?</button><button class="suggestion-chip bg-white hover:bg-gray-100 text-gray-600 text-sm px-3 py-1.5 rounded-full border border-gray-300">Request a Demo</button></div></div>
+            <div class="p-4 bg-white border-t border-gray-200"><form id="chat-form" class="flex items-center space-x-3"><input type="text" id="user-input" placeholder="Ask anything..." class="flex-1 w-full bg-gray-100 border border-gray-300 rounded-lg py-3 px-4 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"><button type="submit" class="cta-button text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg></button></form></div>
+        </div>
+    </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- Demo Request Modal -->
+    <div id="demo-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">Request a Demo</h2>
+            <p class="text-gray-600 mb-6">Our team will get in touch with you shortly.</p>
+            <form id="demo-form">
+                <div class="mb-4"><label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label><input type="text" id="name" name="name" required class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+                <div class="mb-6"><label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label><input type="email" id="email" name="email" required class="w-full bg-gray-100 border border-gray-300 rounded-lg py-2 px-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"></div>
+                <button type="submit" class="w-full cta-button text-white font-bold py-3 px-4 rounded-lg transition duration-200">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        lucide.createIcons();
-
-        const mobileMenuButton = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        const scrollElements = document.querySelectorAll("[data-scroll-reveal]");
-        const isElementInView = (el) => {
-            const rect = el.getBoundingClientRect();
-            return rect.top <= (window.innerHeight || document.documentElement.clientHeight);
-        };
-        const displayScrollElement = (element) => {
-            element.setAttribute("data-scroll-reveal", "in");
-        };
-        const handleScrollAnimation = () => {
-            scrollElements.forEach((el) => {
-                if (isElementInView(el)) {
-                    displayScrollElement(el);
+        // --- Website Scroll Animation ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObserver.unobserve(entry.target);
                 }
             });
-        };
-        window.addEventListener("scroll", handleScrollAnimation);
-        handleScrollAnimation();
+        }, { threshold: 0.1 });
 
-        const toTopButton = document.getElementById('back-to-top-btn');
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                toTopButton.classList.add('active');
-            } else {
-                toTopButton.classList.remove('active');
-            }
+        document.querySelectorAll('.section-reveal').forEach(section => {
+            revealObserver.observe(section);
         });
+
+        // --- Chatbot & Modal Logic ---
+        const chatbotFab = document.getElementById('chatbot-fab');
+        const chatbotContainer = document.getElementById('chatbot-widget-container');
+        const closeChatbotBtn = document.getElementById('close-chatbot-btn');
+        const chatContainer = document.getElementById('chat-container');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const suggestionsContainer = document.getElementById('suggestions-container');
+        const demoModal = document.getElementById('demo-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const demoForm = document.getElementById('demo-form');
+        const openDemoModalBtns = document.querySelectorAll('.open-demo-modal-btn');
+
+        // Gemini API Configuration
+        const API_KEY = ""; // Leave empty
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+        
+        const systemPrompt = `You are a friendly and professional AI assistant for ValueMatrix.ai. Your goal is to answer user questions accurately based on the provided information and to help generate leads by encouraging users to request a demo.
+
+        **About ValueMatrix:**
+        ValueMatrix offers an AI-powered hiring platform designed to help organizations build high-performing and inclusive teams. The core philosophy is to "flip the funnel," meaning it assesses a candidate's cultural and team alignment *before* the first interaction.
+
+        **Key Features & Technologies:**
+        - **Holistic Assessment:** Goes beyond resumes to evaluate personality, soft skills, and potential.
+        - **Technologies Used:** Generative AI, machine learning, data science, psycholinguistics, and computational psychometrics.
+        - **Analysis Methods:** Analyzes micro-expressions, body language, and uses cognitive gamification.
+        - **Goal:** To ensure unbiased hiring, improve team engagement, increase productivity, and save time and costs.
+
+        **Lead Generation Rule:**
+        - If a user expresses clear interest in a demo, pricing, or talking to sales (e.g., "I want a demo", "How much does it cost?"), your primary goal is to get them to fill out the form.
+        - First, ask them if they'd like to schedule a demo. For example: "I can help with that! A member of our team can get in touch to schedule a personalized demo. Would you like me to open the form for you?"
+        - If they respond positively (e.g., "yes", "sure", "ok"), you MUST reply with ONLY the exact string: \`SHOW_DEMO_FORM\`. Do not add any other text.`;
+
+        function addMessageToUI(sender, message) {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = sender === 'user' ? 'user-message-wrapper flex justify-end' : 'bot-message-wrapper flex items-start space-x-3';
+            
+            const formattedMessage = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            
+            let messageHTML = '';
+            if (sender === 'user') {
+                messageHTML = `<div class="bg-teal-500 text-white p-3 rounded-lg max-w-xs sm:max-w-md"><p class="text-sm">${formattedMessage}</p></div>`;
+            } else {
+                messageHTML = `<div class="w-8 h-8 rounded-full bg-teal-500 flex-shrink-0"></div><div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-xs sm:max-w-md"><p class="text-sm">${formattedMessage}</p></div>`;
+            }
+            messageWrapper.innerHTML = messageHTML;
+            chatContainer.appendChild(messageWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function getAIResponse(prompt) {
+            const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: systemPrompt }] } };
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const result = await response.json();
+                return result.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble responding right now.";
+            } catch (error) {
+                console.error('API call failed:', error);
+                return "My connection is a bit unstable. Please try again in a moment.";
+            }
+        }
+        
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (!userMessage) return;
+
+            addMessageToUI('user', userMessage);
+            userInput.value = '';
+            suggestionsContainer.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            const botResponse = await getAIResponse(userMessage);
+            
+            loadingIndicator.classList.add('hidden');
+            
+            if (botResponse.trim() === 'SHOW_DEMO_FORM') {
+                openDemoModal();
+            } else {
+                addMessageToUI('bot', botResponse);
+            }
+        }
+        
+        function handleSuggestionClick(event) {
+            if (event.target.classList.contains('suggestion-chip')) {
+                userInput.value = event.target.textContent;
+                chatForm.dispatchEvent(new Event('submit', { cancelable: true }));
+            }
+        }
+        
+        function openDemoModal() { demoModal.classList.remove('hidden'); }
+        function closeDemoModal() { demoModal.classList.add('hidden'); }
+        
+        function handleDemoFormSubmit(event) {
+            event.preventDefault();
+            const name = event.target.name.value;
+            console.log(`Demo request from: ${name}, ${event.target.email.value}`);
+            closeDemoModal();
+            addMessageToUI('bot', `Thank you, ${name}! Our team will get in touch with you shortly.`);
+            demoForm.reset();
+        }
+
+        function initializeChat() {
+            chatbotFab.addEventListener('click', () => chatbotContainer.classList.toggle('active'));
+            closeChatbotBtn.addEventListener('click', () => chatbotContainer.classList.remove('active'));
+            chatForm.addEventListener('submit', handleFormSubmit);
+            suggestionsContainer.addEventListener('click', handleSuggestionClick);
+            closeModalBtn.addEventListener('click', closeDemoModal);
+            demoForm.addEventListener('submit', handleDemoFormSubmit);
+            openDemoModalBtns.forEach(btn => btn.addEventListener('click', openDemoModal));
+            
+            setTimeout(() => {
+                 addMessageToUI('bot', "Hello! I'm the ValueMatrix AI Assistant. How can I help you today?");
+            }, 500);
+        }
+
+        initializeChat();
     </script>
 </body>
 </html>
+
